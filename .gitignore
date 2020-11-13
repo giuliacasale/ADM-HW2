@@ -128,5 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# ignore datasets
-datasets/
+# custom .gitignore
+**datasets/
+
