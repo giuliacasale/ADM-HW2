@@ -171,7 +171,7 @@ def avg_time_cart_before_removal(df):
     diplay(merge_eventype)
     
     avg = (sum(merge_eventype["difference_times"]) / len(merge_eventype)) / 60
-    return (f"The average time that a product stand into the cart before being removed is: {round(avg,2)} mins")
+    return (f"The average time that a product stand into the cart before being removed is: {round(avg)} mins")
 
 #1.5a
 
@@ -211,7 +211,7 @@ def avg_time_between_view_and_cart(df):
     display(merge_eventype)
 
     avg = (sum(merge_eventype["difference_times"]) / len(merge_eventype)) / 60
-    return avg
+    return round(avg)
 
 #1.5b
 
@@ -242,7 +242,7 @@ def avg_time_between_view_and_purchase(df):
     display(merge_eventype)
     
     avg = (sum(merge_eventype["difference_times"]) / len(merge_eventype)) / 60
-    return avg
+    return round(avg)
 
 
 ##RQ2
