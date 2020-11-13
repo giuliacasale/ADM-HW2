@@ -3,6 +3,19 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
+#before starting: exploring datasets 
+
+'''function that describes the columns of our datas and counts how many null values there are'''
+
+def describe_df(df_names):
+    months = ['October','November']
+    for i in range(len(df_names)):
+        df = pd.read_csv(df_names[i])
+        print(f'Info for {months[i]}')
+        print(df.info(),'\n')
+        print("The total number of null values in each column is:")
+        print(df.isnull().sum(),'\n')
+        
 #useful readerS
 
 '''functions that read only the columns needed to answer
@@ -234,7 +247,7 @@ def avg_time_between_view_and_purchase(df):
 
 ##RQ2
 
-'''We obtain with this function below to groupby category with their score'''
+'''This function below needs to groupby each category with their score'''
 def restrict_dt(month, eventype, n):
     dt = month.copy() #copy the properly month dataset to do our operations 
     
@@ -259,7 +272,9 @@ def plot_n_categories(dt):
     plt.show()
 
 #1st subquery
-'''We obtain with this function below the groupby subcategory with their score'''
+
+'''We obtain with this function below the groupified subcategories with their score'''
+
 def dt_subcategories(month):
     dt = month.copy() #copy the properly month dataset to do our operations 
 
@@ -287,9 +302,11 @@ def plot_n_subcategories(dt, n):
     plt.show()
 
 #2nd subquery
+
 '''For each category print 10 most sold product, in this case we selected the event_type="purchase
-and then we made our foor loop to print the products most sold. In few rows we copy & paste the same
+and then we made our for loop to print the products most sold. In few rows we copy & paste the same
 solution found for our other solutions to questions'''
+
 def most_sold_products_per_category(month, n):
     dt = month.copy() #copy the properly month dataset to do our operations 
     
@@ -304,9 +321,8 @@ def most_sold_products_per_category(month, n):
 
 ##RQ3
 
-'''function that for every dataframe recalls selects a random
-category_code for which we want to apply the function below
-(avg_price)'''
+'''function that selects a random category_code for which we want to apply 
+the function below (avg_price)'''
 
 def choose_category(df): 
     #list of all possibile category_codes in that specific month
@@ -355,21 +371,24 @@ def highest_avg_price(df):
 ##RQ4
 
 '''For a particular brand gave by the user in input find the monthly profit'''
+
 def restrict_bypurchase_brand(month, brand_to_search):
     dt = month.copy() #copy the properly month dataset to do our operations 
     return int(dt[(dt.event_type == "purchase") & (dt.brand == brand_to_search)].groupby(["brand"]).price.sum()) #restrict in purchase way and we compare (to be sure) the brand, then show the profit
 
 '''For a particular brand gave by the user in input find the monthly profit'''
+
 def restrict_bypurchase_brand_avg(month):
     dt = month.copy() #copy the properly month dataset to do our operations 
     return dt[(dt.event_type == "purchase")].groupby(["brand"]).price.mean() #restrict in purchase way, then show the avg profit
 
 '''Between november and october see the biggest losses'''
+
 def big_lose(nov, octb):
     df_nov = nov.copy() #copy the properly month dataset to do our operations
     df_oct = octb.copy() #copy the properly month dataset to do our operations
 
-    #search to undestard which 3 brands have lose more
+    #search to undestard which 3 brands have lost more
     new_ndt_sum = df_nov[df_nov.event_type == "purchase"].groupby(["brand"]).price.sum()
     new_odt_sum = df_oct[df_oct.event_type == "purchase"].groupby(["brand"]).price.sum()
 
@@ -409,7 +428,6 @@ def most_visited_time(df):
     
     return plt.show()
      
-#rivedi funzione
 
 ''' This function takes for every day of the week the number of views there
 were in the store. It then plots just the 10 highest.'''
@@ -461,12 +479,14 @@ def avg_visitors_perday(df):
 
 '''we should operate with whole datasets, so we read and concatenate all rows,
 then we want to return the purchase rate value'''
+
 def purchase_rate(df_names):
     df = loadAllDatasets(df_names, ['event_type', 'product_id']).copy() #load the datasets
     return (df[df.event_type =="purchase"].groupby([df.event_type]).product_id.count())/len(df.count()) #groupby purchase and divide all for the rows to see purchase (products) / total number rows
 
 '''we should calculate the conversion rate...see the definition in the notebook to understand which
 value we should to have'''
+
 def conversion_rate(purchase_rate, df_names):
     df = loadAllDatasets(df_names, ['event_type', 'product_id']).copy() #load the datasets
     conversion_rate = purchase_rate[0]/(df[df.event_type =="view"].groupby([df.event_type]).product_id.count()) #groupby event_type view like the definition present in the notebook and make the operation to obtain the conversion rate
@@ -475,6 +495,7 @@ def conversion_rate(purchase_rate, df_names):
 
 '''load the entire dataset and show the purchases of each category then we will show the conversion
 rate per each category'''
+
 def percategory_show_purchases(df_names):
     dt = loadAllDatasets(df_names, ['event_type', 'category_code', 'user_session'] ).copy() #load the datasets
     
@@ -493,11 +514,13 @@ def percategory_show_purchases(df_names):
     plt.show()
 
 '''we return the number of product per categories in our dataset, is useless but we want to have little summarize'''
+
 def number_categories(df_names):
     df = loadAllDatasets(df_names, ['category_code', 'user_session']).copy() #load the datasets
     return df[df.category_code.notnull()].groupby("category_code").user_session.count() #return per each category the number of products that have
 
 '''finally we obtain the conversion rate per each category as follows (see the definition of conversion rate in the notebook file)'''
+
 def conversion_rate_percategory(df_names, eachcategory_num):
     df = loadAllDatasets(df_names, ['event_type', 'category_code']).copy() #load the datasets
     purchases = df[(df.event_type == "purchase") & (df.category_code.notnull())].groupby("category_code") #per eacj category select the product purchased and don't consider NaN values
@@ -505,4 +528,23 @@ def conversion_rate_percategory(df_names, eachcategory_num):
     conversion_rate = purchases.category_code.count()/eachcategory_num #number of purchase rate divide number of categories
     return conversion_rate.sort_values(ascending=False).dropna() #return in decreasing order and dropna values
 
+
 ## RQ7
+
+'''this function ranks the top 20% of the users and calculates how 
+much they contributed to the total profit'''
+
+def proof_pareto_principle(dataset):
+    
+    # Grouping sales within users and sort in asceding order to rank users
+    total_users = dataset[dataset.event_type=='purchase'].groupby('user_id').agg(tot_sales=('price','sum'))
+    total_users_sorted=total_users.sort_values("tot_sales", ascending=False)
+    
+    # Getting top 20% users
+    top_20_users=total_users_sorted.head(int(len(total_users_sorted)*(.2)))
+    display(top_20_users)
+    
+    # Calculate the revenue gained from 20% of users
+    pur_con_20 = top_20_users.tot_sales.sum()
+    
+    return pur_con_20
